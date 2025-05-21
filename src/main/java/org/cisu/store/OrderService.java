@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public class OrderService {
 
     private PaymentService paymentService;
@@ -17,8 +17,9 @@ public class OrderService {
     * how to create instances of the payment service interface.
     */
     //  @Autowired -> must be used in multi constructors
+    // @Qualifier("stripe") => only needs if we don't specify manually AppConfig.java
     @Autowired
-    public OrderService(@Qualifier("stripe") PaymentService paymentService) {
+    public OrderService(PaymentService paymentService) {
         this.paymentService = paymentService;
     }
 

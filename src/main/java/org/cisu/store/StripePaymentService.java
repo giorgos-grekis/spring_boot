@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("stripe")
-@Primary // use this in order to use the default Bean
+//@Service("stripe")
+//@Primary // use this in order to use the default Bean
 public class StripePaymentService implements PaymentService {
 
     @Value("${stripe.apiUrl}")
