@@ -3,6 +3,7 @@ package org.cisu.store;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 /*
 * Configuring Beans
@@ -28,6 +29,7 @@ public class AppConfig  {
 
     @Bean
 //    @Lazy
+    @Scope("prototype")
     public OrderService orderService() {
         if (paymentGateway.equals("stripe")) {
             return new OrderService(stripe());
