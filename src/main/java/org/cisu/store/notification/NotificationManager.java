@@ -12,7 +12,7 @@ public class NotificationManager {
         this.notificationService = notificationService;
     }
 
-    public void sendNotification(String message) {
-        notificationService.send(message);
+    public void sendNotification(String message, String recipientEmail) {
+        notificationService.send(message, recipientEmail);
     }
 }
