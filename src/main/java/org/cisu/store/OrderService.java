@@ -18,7 +18,7 @@ public class OrderService {
     */
     //  @Autowired -> must be used in multi constructors
     @Autowired
-    public OrderService(@Qualifier("paypal") PaymentService paymentService) {
+    public OrderService(@Qualifier("stripe") PaymentService paymentService) {
         this.paymentService = paymentService;
     }
 

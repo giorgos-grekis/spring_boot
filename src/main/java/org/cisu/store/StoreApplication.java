@@ -25,7 +25,7 @@ public class StoreApplication {
 
        // Print notification services
 //       var emailNotificationManager = new NotificationManager(new EmailNotificationService());
-//        emailNotificationManager.sendNotification("Hello email");
+//        emailNotificationManager.sendNotification("Hello email ");
 //
 //        var smsNotificationManager = new NotificationManager(new SMSNotificationService());
 //        smsNotificationManager.sendNotification("Hello sms");
