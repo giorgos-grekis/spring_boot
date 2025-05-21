@@ -1,0 +1,62 @@
+Συνοπτικά Στάδια Lifecycle ενός Bean:
+ - Instantiation – Το Spring δημιουργεί ένα instance του bean.
+ - Populate Properties – Γίνονται inject τα dependencies.
+ - Bean Name Awareness (αν εφαρμόζει το bean το BeanNameAware)
+ - BeanFactory/ ApplicationContext Awareness (αν εφαρμόζει τα αντίστοιχα interfaces)
+ - Pre-initialization – Μέθοδοι που εκτελούνται πριν την αρχικοποίηση
+ - Initialization – Εκτελούνται custom μέθοδοι αρχικοποίησης.
+ - Post-initialization
+ - Usage
+ - Destruction – Πριν το bean καταστραφεί (π.χ. κατά το shutdown).
+
+
+ Τρόποι παρέμβασης στο lifecycle:
+
+1.  Εκτελείται μετά το dependency injection αλλά πριν το bean χρησιμοποιηθεί.
+ @PostConstruct
+ public void init() {
+     // custom initialization logic
+ }
+
+ 2. Εκτελείται πριν καταστραφεί το bean.
+ @PreDestroy
+ public void cleanup() {
+     // cleanup resources
+ }
+
+ 3. InitializingBean interface
+ public class MyBean implements InitializingBean {
+     @Override
+     public void afterPropertiesSet() {
+         // initialization logic
+     }
+ }
+
+
+ 4. DisposableBean interface
+ public class MyBean implements DisposableBean {
+     @Override
+     public void destroy() {
+         // cleanup logic
+     }
+ }
+
+ 5. Custom init/destroy methods
+ Μπορείς να τα δηλώσεις στο configuration:
+ @Bean(initMethod = "customInit", destroyMethod = "customDestroy")
+ public MyBean myBean() {
+     return new MyBean();
+ }
+
+ 6. BeanPostProcessor
+ Για παρέμβαση σε όλα τα beans πριν/μετά την αρχικοποίησή τους.
+ public class MyBeanPostProcessor implements BeanPostProcessor {
+     public Object postProcessBeforeInitialization(Object bean, String name) { return bean; }
+     public Object postProcessAfterInitialization(Object bean, String name) { return bean; }
+ }
+
+
+  Τι να χρησιμοποιώ συνήθως;
+ -  @PostConstruct / @PreDestroy: Πιο απλό και καθαρό.
+ - Interfaces (InitializingBean, DisposableBean): Όταν θες πιο "προγραμματιστικό" έλεγχο.
+ - BeanPostProcessor: Για cross-cutting λειτουργίες σε πολλά beans (π.χ. logging, proxies).

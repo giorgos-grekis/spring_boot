@@ -3,13 +3,15 @@ package org.cisu.store;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 public class StoreApplication {
 
     public static void main(String[] args) {
         // application context is ioc container (it's a storage for our objects)
-       ApplicationContext context = SpringApplication.run(StoreApplication.class, args);
+//        ApplicationContext context = SpringApplication.run(StoreApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(StoreApplication.class, args);
 
 
 
@@ -22,6 +24,7 @@ public class StoreApplication {
        var orderService =  context.getBean(OrderService.class);
         var orderService2 =  context.getBean(OrderService.class);
        orderService.placeOrder();
+       context.close();
 
        // Print notification services
 //       var emailNotificationManager = new NotificationManager(new EmailNotificationService());
