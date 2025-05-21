@@ -1,0 +1,93 @@
+JDBC
+
+Java Database Connectivity
+Allows Java code to execute SQL directly
+We have to manually manage everything
+
+
+example
+
+var connection = DriverManager.getConnection(url, username, password);
+
+var query = "SELECT id, name FROM users";
+var statement = connection.createStatement();
+
+var result = statement.executeQuery(query);
+
+while (result.next()) {
+    var id = result.getLong("id");
+    var name = result.getString("name");
+}
+
+result.close();
+statement.close();
+connection.close();
+
+
+--------------------------------------------------------------------------------------
+
+JPA
+
+Jakarta Persistence API
+A specification for mapping Java objects to database tables
+We don't write SQL queries
+We work directly with objects
+
+example
+
+@Entity
+@Table(name="users")
+public class User {
+    @Id
+    private Long id;
+
+    private String name;
+}
+
+var user = new User("cisu");
+var result = entityManager.persist(user);
+entityManager.close();
+
+
+------------------------------------------------------------------------------------
+
+HIBERNATE
+
+An Object/Relational Mapper(ORM)
+We don't write SQL queries
+Provides caching
+Hibernate Query Language
+Automatic schema generation
+
+
+
+------------------------------------------------------------------------------------------
+
+
+DATA ACCESS TECHNOLOGIES
+
+SPRING DATA JPA     => Repositories
+JPA/HIBERNATE       => Object-oriented persistence
+JDBC                => Low-level access
+DATABASE
+
+example
+
+public interface UserRepository extends CrudRepository<User, Long> {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
