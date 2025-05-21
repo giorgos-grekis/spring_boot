@@ -1,5 +1,8 @@
 package org.cisu.store;
 
+import org.cisu.store.notification.EmailNotificationService;
+import org.cisu.store.notification.NotificationManager;
+import org.cisu.store.notification.SMSNotificationService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -11,16 +14,27 @@ public class StoreApplication {
         // application context is ioc container (it's a storage for our objects)
        ApplicationContext context = SpringApplication.run(StoreApplication.class, args);
 
-       var orderService =  context.getBean(OrderService.class);
-
-       orderService.placeOrder();
-
-////        var orderService = new OrderService(new StripePaymentService());
-////        orderService.placeOrder();
+//        // var orderService = new OrderService(new StripePaymentService());
+//        // orderService.placeOrder();
 //
 //        var orderPaypalService = new OrderService();
-////        orderPaypalService.setPaymentService(new PayPalPaymentService());
+//        // orderPaypalService.setPaymentService(new PayPalPaymentService());
 //        orderPaypalService.placeOrder();
+       var orderService =  context.getBean(OrderService.class);
+       orderService.placeOrder();
+
+       // Print notification services
+//       var emailNotificationManager = new NotificationManager(new EmailNotificationService());
+//        emailNotificationManager.sendNotification("Hello email");
+//
+//        var smsNotificationManager = new NotificationManager(new SMSNotificationService());
+//        smsNotificationManager.sendNotification("Hello sms");
+
+
+//        var notificationService = context.getBean(NotificationManager.class);
+//       notificationService.sendNotification("Hello ioc bean");
+
+
     }
 
 }
