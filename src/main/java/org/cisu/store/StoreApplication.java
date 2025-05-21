@@ -14,14 +14,16 @@ public class StoreApplication {
         // application context is ioc container (it's a storage for our objects)
        ApplicationContext context = SpringApplication.run(StoreApplication.class, args);
 
+       var resource = context.getBean(HeavyResource.class);
+
 //        // var orderService = new OrderService(new StripePaymentService());
 //        // orderService.placeOrder();
 //
 //        var orderPaypalService = new OrderService();
 //        // orderPaypalService.setPaymentService(new PayPalPaymentService());
 //        orderPaypalService.placeOrder();
-       var orderService =  context.getBean(OrderService.class);
-       orderService.placeOrder();
+//       var orderService =  context.getBean(OrderService.class);
+//       orderService.placeOrder();
 
        // Print notification services
 //       var emailNotificationManager = new NotificationManager(new EmailNotificationService());

@@ -1,8 +1,6 @@
 package org.cisu.store;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 
 //@Service
 public class OrderService {
@@ -21,6 +19,7 @@ public class OrderService {
     @Autowired
     public OrderService(PaymentService paymentService) {
         this.paymentService = paymentService;
+        System.out.println("OrderService created");
     }
 
     public void placeOrder() {
