@@ -42,9 +42,11 @@ public class StoreApplication {
 //        var notificationService = context.getBean(NotificationManager.class);
 //       notificationService.sendNotification("Hello ioc bean", "test@test.com");
 
-            var userService = context.getBean(UserService.class);
-        userService.registerUser(new User(1L, "myemail@gmail.com", "123456" , "cisu"));
-        userService.registerUser(new User(1L, "myemail@gmail.com", "123456" , "cisu"));
+
+//                // Test add two users with same data
+//            var userService = context.getBean(UserService.class);
+//        userService.registerUser(new User(1L, "myemail@gmail.com", "123456" , "cisu"));
+//        userService.registerUser(new User(1L, "myemail@gmail.com", "123456" , "cisu"));
 
 
     }
