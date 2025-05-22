@@ -11,7 +11,7 @@ services:
 #      - MYSQL_RANDOM_ROOT_PASSWORD
 
     container_name: mysql
-    image: mysql:8.1
+    image: mysql:9.1
     volumes:
       - mysql_volume:/var/lib/mysql
     ports:
