@@ -1,4 +1,6 @@
-create table users
+CREATE DATABASE IF NOT EXISTS store;
+
+create table store.users
 (
     id       bigint auto_increment
         primary key,
@@ -7,7 +9,7 @@ create table users
     password varchar(255) not null
 );
 
-create table addresses
+create table store.addresses
 (
     id      bigint auto_increment
         primary key,
