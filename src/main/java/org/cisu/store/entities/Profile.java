@@ -1,8 +1,7 @@
 package org.cisu.store.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -10,6 +9,10 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Table(name = "profiles")
 public class Profile {
 
@@ -30,6 +33,11 @@ public class Profile {
     @Column(name = "loyalty_points")
     private Integer loyaltyPoints ;
 
+    @OneToOne
+    @JoinColumn(name = "id")
+    @MapsId
+    @ToString.Exclude
+    private User user;
 
 
 
