@@ -1,0 +1,64 @@
+ OneToMany σχέση
+Μια σχέση @OneToMany σημαίνει ότι ένα αντικείμενο A μπορεί να σχετίζεται με πολλά αντικείμενα B.
+
+Παράδειγμα:
+
+Ένας συγγραφέας έχει πολλά βιβλία.
+
+Άρα: Author → Book (ένα προς πολλά)
+
+🔁 Unidirectional vs Bidirectional
+🔹 1. Unidirectional (μονόδρομη σχέση)
+Η σχέση είναι ορατή μόνο από τη μία πλευρά (π.χ. μόνο από τον Author προς τα Books).
+
+java
+Copy
+Edit
+@Entity
+public class Author {
+    @Id
+    private Long id;
+
+    @OneToMany
+    private List<Book> books;  // Ο συγγραφέας "βλέπει" τα βιβλία του
+}
+Η κλάση Book δεν γνωρίζει τίποτα για τον Author.
+
+Δεν υπάρχει @ManyToOne στο Book.
+
+Η βάση δεδομένων δημιουργεί έναν join table (πίνακας συσχέτισης) για να αποθηκεύσει τη σχέση.
+
+🔸 2. Bidirectional (αμφίδρομη σχέση)
+Η σχέση είναι ορατή και από τις δύο πλευρές: ο Author "βλέπει" τα Books, και κάθε Book "ξέρει" ποιος είναι ο Author.
+
+java
+Copy
+Edit
+@Entity
+public class Author {
+    @Id
+    private Long id;
+
+    @OneToMany(mappedBy = "author")  // το mappedBy δείχνει ότι ο Book έχει το foreign key
+    private List<Book> books;
+}
+
+@Entity
+public class Book {
+    @Id
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")  // foreign key
+    private Author author;           // κάθε βιβλίο "γνωρίζει" τον συγγραφέα του
+}
+Η Book έχει author ως πεδίο.
+
+Το mappedBy δηλώνει ποιο πεδίο στον Book αντιπροσωπεύει αυτή τη σχέση.
+
+Η βάση δεδομένων δεν χρειάζεται join table. Η Book απλώς έχει ένα author_id ως ξένο κλειδί (foreign key).
+
+🟡 Πότε χρησιμοποιείς το καθένα;
+Unidirectional: Πιο απλό στη χρήση όταν η αντίστροφη σχέση δεν σε ενδιαφέρει (π.χ. δεν χρειάζεται να ξέρεις ποιος είναι ο συγγραφέας από το βιβλίο).
+
+Bidirectional: Χρήσιμο όταν θες να πλοηγείσαι και στις δύο κατευθύνσεις, π.χ. να πάρεις όλα τα βιβλία ενός συγγραφέα ή να βρεις τον συγγραφέα ενός βιβλίου.

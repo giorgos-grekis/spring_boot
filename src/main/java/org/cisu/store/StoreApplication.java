@@ -1,5 +1,6 @@
 package org.cisu.store;
 
+import org.cisu.store.entities.Address;
 import org.cisu.store.entities.User;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -15,6 +16,21 @@ public class StoreApplication {
                 .email("john@gmail.com")
                 .password("password")
                 .build();
+
+        var address = Address.builder()
+                .street("Street")
+                .city("City")
+                .state("State")
+                .zip("zip")
+                .build();
+
+
+//        user.getAddresses().add(address);
+//        address.setUser(user);
+        user.addAddress(address);
+
+        System.out.println(user);
+
 
     }
 

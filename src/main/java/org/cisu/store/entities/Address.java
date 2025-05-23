@@ -1,12 +1,14 @@
 package org.cisu.store.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Entity(name = "addresses")
 public class Address {
 
@@ -22,9 +24,15 @@ public class Address {
     private String city;
 
     @Column(name = "zip")
-    private String zipCode;
+    private String zip;
 
     @Column(name = "state", nullable = false)
     private String state;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude // Exclude this field for conversion to spring
+    private User user;
+
 
 }
