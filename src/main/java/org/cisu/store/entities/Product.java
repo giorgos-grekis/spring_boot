@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "products")
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -20,10 +19,14 @@ public class Product {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "price")
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "price", precision = 10, scale = 2) // decimal(10,2)
     private BigDecimal price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+//    @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "category_id")
     private Category category;
 
