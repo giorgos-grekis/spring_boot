@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.cisu.store.entities.User;
+import org.cisu.store.repositories.ProfileRepository;
 import org.cisu.store.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
     /*
      the entityManager is responsible for managing the entities
      using the persistence context
@@ -39,6 +41,13 @@ public class UserService {
             System.out.println("Persistent after save");
         else
             System.out.println("Transient or Detached after save");
+    }
+
+
+    @Transactional
+    public void showRelatedEntities() {
+        var profile = profileRepository.findById(1L).orElseThrow();
+        System.out.println(profile.getUser().getEmail());
     }
 
 }

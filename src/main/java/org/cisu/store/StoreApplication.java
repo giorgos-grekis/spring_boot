@@ -39,7 +39,8 @@ public class StoreApplication {
 
         // Persistent
         var service = context.getBean(UserService.class);
-        service.showEntityStates();
+//        service.showEntityStates();
+        service.showRelatedEntities();
 
 
 
