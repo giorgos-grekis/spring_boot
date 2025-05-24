@@ -2,6 +2,7 @@ package org.cisu.store;
 
 import org.cisu.store.entities.User;
 import org.cisu.store.repositories.UserRepository;
+import org.cisu.store.services.UserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -13,30 +14,32 @@ public class StoreApplication {
 
         ApplicationContext context = SpringApplication.run(StoreApplication.class, args);
 
-        var userCreate =  User.builder()
-                .name("John")
-                .email("john@gmail.com")
-                .password("password")
-                .build();
-
-        var repository = context.getBean(UserRepository.class);
-
-
-        repository.save(userCreate);
+//        var userCreate =  User.builder()
+//                .name("John")
+//                .email("john@gmail.com")
+//                .password("password")
+//                .build();
+//
+//        var repository = context.getBean(UserRepository.class);
+//
+//
+//        repository.save(userCreate);
 
         // numbers in Java are Integers by default so we put a L at the end to
         // convert the Integer into Long type
 //        repository.findById(1L).orElse(null);
 //        var user = repository.findById(1L).orElseThrow();
+//        repository.delete(user);
 
         // findAll returns an Iterable
-       repository.findAll().forEach(u -> System.out.println(u.getEmail()));
-
-
-       repository.deleteById(userCreate.getId());
+//       repository.findAll().forEach(u -> System.out.println(u.getEmail()));
+//       repository.deleteById(userCreate.getId());
 
 
 
+        // Persistent
+        var service = context.getBean(UserService.class);
+        service.showEntityStates();
 
 
 
