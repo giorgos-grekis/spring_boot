@@ -32,7 +32,7 @@ public class User {
     private String password;
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     @Builder.Default // we need this in order to use the Builder
     private List<Address> addresses = new ArrayList<>();
 

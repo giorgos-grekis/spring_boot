@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.cisu.store.entities.Address;
 import org.cisu.store.entities.User;
 import org.cisu.store.repositories.AddressRepository;
 import org.cisu.store.repositories.ProfileRepository;
@@ -54,6 +55,27 @@ public class UserService {
 
     public void fetchAddress() {
         var address = addressRepository.findById(1L).orElseThrow();
+    }
+
+    public void persistRelated() {
+        var user = User.builder()
+                .name("John Doe")
+                .email("john.doe@example.com")
+                .password("password")
+                .build();
+
+        var address =  Address.builder()
+                .street("street")
+                .city("city")
+                .state("state")
+                .zip("zip")
+                .build();
+
+        user.addAddress(address);
+
+        userRepository.save(user);
+
+
     }
 
 }
