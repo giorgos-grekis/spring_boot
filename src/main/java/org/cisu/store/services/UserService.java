@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.cisu.store.entities.User;
+import org.cisu.store.repositories.AddressRepository;
 import org.cisu.store.repositories.ProfileRepository;
 import org.cisu.store.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class UserService {
      using the persistence context
      */
     private final EntityManager entityManager;
+    private final AddressRepository addressRepository;
 
     @Transactional
     public void showEntityStates() {
@@ -48,6 +50,10 @@ public class UserService {
     public void showRelatedEntities() {
         var profile = profileRepository.findById(1L).orElseThrow();
         System.out.println(profile.getUser().getEmail());
+    }
+
+    public void fetchAddress() {
+        var address = addressRepository.findById(1L).orElseThrow();
     }
 
 }

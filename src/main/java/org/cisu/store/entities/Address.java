@@ -29,7 +29,7 @@ public class Address {
     @Column(name = "state", nullable = false)
     private String state;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @ToString.Exclude // Exclude this field for conversion to spring
     private User user;
