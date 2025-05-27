@@ -1,0 +1,6 @@
+package org.cisu.store.dtos;
+
+public interface UserSummary {
+    Long getId();
+    String getEmail();
+}

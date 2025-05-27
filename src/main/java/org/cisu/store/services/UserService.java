@@ -5,7 +5,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.cisu.store.entities.Address;
-import org.cisu.store.entities.Category;
 import org.cisu.store.entities.User;
 import org.cisu.store.repositories.AddressRepository;
 import org.cisu.store.repositories.ProductRepository;
@@ -118,6 +117,13 @@ public class UserService {
             System.out.println(u);
             u.getAddresses().forEach(System.out::println);
         });
+    }
+
+    @Transactional
+    public void printLoyalProfiles() {
+        var users = userRepository.findLoyalUsers(2);
+                users.forEach(p ->
+                        System.out.println(p.getId()+ ": "  + p.getEmail()));
     }
 
 }
