@@ -47,7 +47,8 @@ public class StoreApplication {
 //        service.updateProductPrices();
 //        service.fetchProducts();
 //        service.fetchProducts();
-        service.printLoyalProfiles();
+//        service.printLoyalProfiles();
+        service.fetchProducts();
 
 //        // add address
 //        var address = Address.builder()

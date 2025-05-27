@@ -4,6 +4,7 @@ import org.cisu.store.dtos.ProductSummary;
 import org.cisu.store.dtos.ProductSummaryDTO;
 import org.cisu.store.entities.Category;
 import org.cisu.store.entities.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
@@ -13,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface ProductRepository extends CrudRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
 //    // select * from products where name = ?
 //    List<Product> findByName(String name);

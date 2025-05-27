@@ -5,11 +5,14 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.cisu.store.entities.Address;
+import org.cisu.store.entities.Product;
 import org.cisu.store.entities.User;
 import org.cisu.store.repositories.AddressRepository;
 import org.cisu.store.repositories.ProductRepository;
 import org.cisu.store.repositories.ProfileRepository;
 import org.cisu.store.repositories.UserRepository;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -99,8 +102,19 @@ public class UserService {
     @Transactional
     public void fetchProducts() {
 //       var products = productRepository.findByCategory(new Category((byte)1));
-       var products = productRepository.findProductsProcedure(BigDecimal.valueOf(1)
-               ,BigDecimal.valueOf(15));
+//       var products = productRepository.findProductsProcedure(BigDecimal.valueOf(1)
+//               ,BigDecimal.valueOf(15));
+//        products.forEach(System.out::println);
+        var product = new Product();
+        product.setName("product");
+
+        var matcher =  ExampleMatcher.matching()
+                .withIncludeNullValues()
+                .withIgnorePaths("id", "description")
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        var example = Example.of(product, matcher);
+        var products = productRepository.findAll(example);
         products.forEach(System.out::println);
     }
 
