@@ -7,9 +7,12 @@ import lombok.AllArgsConstructor;
 import org.cisu.store.entities.Address;
 import org.cisu.store.entities.User;
 import org.cisu.store.repositories.AddressRepository;
+import org.cisu.store.repositories.ProductRepository;
 import org.cisu.store.repositories.ProfileRepository;
 import org.cisu.store.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @AllArgsConstructor
 @Service
@@ -23,6 +26,7 @@ public class UserService {
      */
     private final EntityManager entityManager;
     private final AddressRepository addressRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public void showEntityStates() {
@@ -84,6 +88,11 @@ public class UserService {
         var address = user.getAddresses().getFirst();
         user.removeAddress(address);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateProductPrices() {
+        productRepository.updatePriceByCategory(BigDecimal.valueOf(10), (byte) 1);
     }
 
 }

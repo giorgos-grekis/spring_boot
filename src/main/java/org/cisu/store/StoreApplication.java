@@ -43,7 +43,8 @@ public class StoreApplication {
 //        service.showRelatedEntities();
 //        service.fetchAddress();
 //        service.persistRelated();
-        service.deleteRelated();
+//        service.deleteRelated();
+        service.updateProductPrices();
 
 
 
