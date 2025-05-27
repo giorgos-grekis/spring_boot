@@ -4,12 +4,13 @@ import jakarta.persistence.EntityManager;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.cisu.store.entities.Address;
-import org.cisu.store.entities.User;
+import org.cisu.store.entities.*;
 import org.cisu.store.repositories.AddressRepository;
 import org.cisu.store.repositories.ProfileRepository;
 import org.cisu.store.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @AllArgsConstructor
 @Service
@@ -23,6 +24,7 @@ public class UserService {
      */
     private final EntityManager entityManager;
     private final AddressRepository addressRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public void showEntityStates() {
@@ -84,6 +86,21 @@ public class UserService {
         var address = user.getAddresses().getFirst();
         user.removeAddress(address);
         userRepository.save(user);
+    }
+
+    public void manageProducts() {
+
+        var category = new Category("Category 1");
+
+        var product = Product.builder()
+                .name("Product 1")
+                .description("Product description")
+                .price(BigDecimal.valueOf(10.99))
+                .category(category)
+                .build();
+
+        productRepository.save(product);
+
     }
 
 }
