@@ -45,7 +45,8 @@ public class StoreApplication {
 //        service.persistRelated();
 //        service.deleteRelated();
 //        service.updateProductPrices();
-            service.fetchProducts();
+//            service.fetchProducts();
+        service.fetchUser();
 
 
 //        // add address

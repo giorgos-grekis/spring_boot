@@ -73,6 +73,6 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     void updatePriceByCategory(BigDecimal newPrice, Byte categoryId);
 
 
-    @Query("select new org.cisu.store.dtos.ProductSummaryDTO(p.id, p.name) from Product p where p.category = :category")
+    @Query("select new org.cisu.store.dtos.ProductSummaryDTO(p.id, p.name)  from Product p where p.category = :category")
     List<ProductSummaryDTO> findByCategory(@Param("category") Category category);
 }

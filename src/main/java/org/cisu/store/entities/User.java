@@ -15,7 +15,6 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
 @Entity
 @Table(name = "users")
@@ -66,8 +65,8 @@ public class User {
     @Builder.Default
     private Set<Tag> tags = new HashSet<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private Profile profile;
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+//    private Profile profile;
 
     @ManyToMany
     @JoinTable(
@@ -77,4 +76,11 @@ public class User {
     )
     private Set<Product> wishList = new HashSet<>();
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "name = " + name + ", " +
+                "email = " + email + ")";
+    }
 }
