@@ -22,4 +22,7 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private Set<Product> products = new LinkedHashSet<>();
 
+    public Category(byte id) {
+        this.id = id;
+    }
 }

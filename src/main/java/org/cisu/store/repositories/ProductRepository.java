@@ -1,5 +1,8 @@
 package org.cisu.store.repositories;
 
+import org.cisu.store.dtos.ProductSummary;
+import org.cisu.store.dtos.ProductSummaryDTO;
+import org.cisu.store.entities.Category;
 import org.cisu.store.entities.Product;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,43 +14,43 @@ import java.util.List;
 
 public interface ProductRepository extends CrudRepository<Product, Long> {
 
-    // select * from products where name = ?
-    List<Product> findByName(String name);
-
-    // select * from products where name like ?
-    List<Product> findByNameLike(String name);
-
-
-    List<Product> findByNameNotLike(String name);
-    List<Product> findByNameContaining(String name);
-
-    List<Product> findByNameContains(String name);
-    List<Product> findByNameStartingWith(String name);
-    List<Product> findByNameEndingWith(String name);
-
-    List<Product> findByNameEndingWithIgnoreCase(String name);
-
-
-    // Numbers
-    List<Product> findByPrice(BigDecimal price);
-
-    List<Product> findByPriceGreaterThan(BigDecimal price);
-    List<Product> findByPriceBetween(BigDecimal min, BigDecimal max);
-
-
-    // null
-    List<Product> findByDescriptionNull(BigDecimal price);
-    List<Product> findByDescriptionNotNull(BigDecimal price);
-
-    // Multiple conditions
-    List<Product> findByDescriptionNullAndNameNull();
-
-    // Sort (OrderBy)
-    List<Product> findByNameOrderByPriceAsc(String name);
-
-    // Limit (Top/First)
-    List<Product> findTop5ByNameOrderByPriceAsc(String name);
-    List<Product> findFirst5ByNameOrderByPriceAsc(String name);
+//    // select * from products where name = ?
+//    List<Product> findByName(String name);
+//
+//    // select * from products where name like ?
+//    List<Product> findByNameLike(String name);
+//
+//
+//    List<Product> findByNameNotLike(String name);
+//    List<Product> findByNameContaining(String name);
+//
+//    List<Product> findByNameContains(String name);
+//    List<Product> findByNameStartingWith(String name);
+//    List<Product> findByNameEndingWith(String name);
+//
+//    List<Product> findByNameEndingWithIgnoreCase(String name);
+//
+//
+//    // Numbers
+//    List<Product> findByPrice(BigDecimal price);
+//
+//    List<Product> findByPriceGreaterThan(BigDecimal price);
+//    List<Product> findByPriceBetween(BigDecimal min, BigDecimal max);
+//
+//
+//    // null
+//    List<Product> findByDescriptionNull(BigDecimal price);
+//    List<Product> findByDescriptionNotNull(BigDecimal price);
+//
+//    // Multiple conditions
+//    List<Product> findByDescriptionNullAndNameNull();
+//
+//    // Sort (OrderBy)
+//    List<Product> findByNameOrderByPriceAsc(String name);
+//
+//    // Limit (Top/First)
+//    List<Product> findTop5ByNameOrderByPriceAsc(String name);
+//    List<Product> findFirst5ByNameOrderByPriceAsc(String name);
 
 
     // Find products whose prices are in a given range and sort by name
@@ -68,4 +71,8 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     @Modifying
     @Query("update Product p set p.price = :newPrice where p.category = :categoryId")
     void updatePriceByCategory(BigDecimal newPrice, Byte categoryId);
+
+
+    @Query("select new org.cisu.store.dtos.ProductSummaryDTO(p.id, p.name) from Product p where p.category = :category")
+    List<ProductSummaryDTO> findByCategory(@Param("category") Category category);
 }

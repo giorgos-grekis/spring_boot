@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.cisu.store.entities.Address;
+import org.cisu.store.entities.Category;
 import org.cisu.store.entities.User;
 import org.cisu.store.repositories.AddressRepository;
 import org.cisu.store.repositories.ProductRepository;
@@ -93,6 +94,12 @@ public class UserService {
     @Transactional
     public void updateProductPrices() {
         productRepository.updatePriceByCategory(BigDecimal.valueOf(10), (byte) 1);
+    }
+
+
+    public void fetchProducts() {
+       var products = productRepository.findByCategory(new Category((byte)1));
+       products.forEach(System.out::println);
     }
 
 }
