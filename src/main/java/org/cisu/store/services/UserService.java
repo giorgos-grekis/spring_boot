@@ -97,9 +97,12 @@ public class UserService {
     }
 
 
+    @Transactional
     public void fetchProducts() {
-       var products = productRepository.findByCategory(new Category((byte)1));
-       products.forEach(System.out::println);
+//       var products = productRepository.findByCategory(new Category((byte)1));
+       var products = productRepository.findProductsProcedure(BigDecimal.valueOf(1)
+               ,BigDecimal.valueOf(15));
+        products.forEach(System.out::println);
     }
 
     @Transactional

@@ -6,6 +6,7 @@ import org.cisu.store.entities.Category;
 import org.cisu.store.entities.Product;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -62,6 +63,10 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 //    @Query("select p from Product p where p.price between :min and :max order by p.name")
     @Query("select p from Product p join p.category where p.price between :min and :max order by p.name")
     List<Product> findProductsJPQL(@Param("min") BigDecimal min, @Param("max") BigDecimal max);
+
+    // with Procedure
+    @Procedure("findProductsByPrice")
+    List<Product> findProductsProcedure(BigDecimal min, BigDecimal max);
 
 
     @Query("select count(*) from Product p where p.price between :min and :max")

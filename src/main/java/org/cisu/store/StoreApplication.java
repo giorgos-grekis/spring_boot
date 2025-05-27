@@ -46,7 +46,7 @@ public class StoreApplication {
 //        service.deleteRelated();
 //        service.updateProductPrices();
 //            service.fetchProducts();
-        service.fetchUser();
+        service.fetchProducts();
 
 
 //        // add address
