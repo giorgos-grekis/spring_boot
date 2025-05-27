@@ -31,8 +31,10 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    // orphanRemoval = true remove the null entity
+    @OneToMany(mappedBy = "user",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
     @Builder.Default // we need this in order to use the Builder
     private List<Address> addresses = new ArrayList<>();
 
@@ -45,7 +47,7 @@ public class User {
 
     public void removeAddress(Address address) {
         addresses.remove(address);
-        address.setUser(null);
+        address.setUser(null); // Orphan entity
     }
 
     public void addTag(String tagName) {
@@ -64,7 +66,7 @@ public class User {
     @Builder.Default
     private Set<Tag> tags = new HashSet<>();
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Profile profile;
 
     @ManyToMany

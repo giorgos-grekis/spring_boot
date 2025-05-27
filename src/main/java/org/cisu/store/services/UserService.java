@@ -74,8 +74,16 @@ public class UserService {
         user.addAddress(address);
 
         userRepository.save(user);
+    }
 
-
+    // When we try to delete an entity Hibernate fetch that entity
+    // with relation to make sure data is correct
+    @Transactional
+    public void deleteRelated() {
+        var user = userRepository.findById(3L).orElseThrow();
+        var address = user.getAddresses().getFirst();
+        user.removeAddress(address);
+        userRepository.save(user);
     }
 
 }

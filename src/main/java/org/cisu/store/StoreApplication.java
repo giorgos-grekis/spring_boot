@@ -42,8 +42,8 @@ public class StoreApplication {
 //        service.showEntityStates();
 //        service.showRelatedEntities();
 //        service.fetchAddress();
-        service.persistRelated();
-
+//        service.persistRelated();
+        service.deleteRelated();
 
 
 
