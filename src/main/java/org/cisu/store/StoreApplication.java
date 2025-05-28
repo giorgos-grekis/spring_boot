@@ -51,7 +51,7 @@ public class StoreApplication {
 //        service.fetchProducts();
 //        service.printLoyalProfiles();
 //        service.fetchProducts();
-//        service.fetchProducts();
+        service.fetchProductsByCriteria();
         service.fetchProductsBySpecifications("prod", BigDecimal.valueOf(1), null);
 
 //        // add address
