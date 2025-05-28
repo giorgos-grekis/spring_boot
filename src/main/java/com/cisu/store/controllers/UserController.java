@@ -36,7 +36,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        var userDto = new UserDto(user.getId(), user.getName(), user.getEmail());
+//        var userDto = new UserDto(user.getId(), user.getName(), user.getEmail());
 //        return new ResponseEntity<>(user, HttpStatus.OK);
         return ResponseEntity.ok(userMapper.toDto(user));
     }
