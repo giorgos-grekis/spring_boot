@@ -1,5 +1,6 @@
 package com.cisu.store.controllers;
 
+import com.cisu.store.dtos.UserDto;
 import com.cisu.store.entities.User;
 import com.cisu.store.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -20,19 +22,23 @@ public class UserController {
     private final UserRepository userRepository;
 
     @GetMapping
-    public Iterable<User> getAllUser() {
-        return userRepository.findAll();
+    public List<UserDto> getAllUser() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> new UserDto(user.getId(), user.getName(), user.getEmail()))
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         var user = userRepository.findById(id).orElse(null);
         if (user == null) {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             return ResponseEntity.notFound().build();
         }
 
+        var userDto = new UserDto(user.getId(), user.getName(), user.getEmail());
 //        return new ResponseEntity<>(user, HttpStatus.OK);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userDto);
     }
 }
