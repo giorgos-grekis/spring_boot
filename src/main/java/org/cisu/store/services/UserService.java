@@ -11,8 +11,10 @@ import org.cisu.store.repositories.AddressRepository;
 import org.cisu.store.repositories.ProductRepository;
 import org.cisu.store.repositories.ProfileRepository;
 import org.cisu.store.repositories.UserRepository;
+import org.cisu.store.repositories.specifications.ProductSpec;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -123,6 +125,24 @@ public class UserService {
                 BigDecimal.valueOf(1), null);
 
         products.forEach(System.out::println);
+    }
+
+    public void fetchProductsBySpecifications(String name,
+                                              BigDecimal minPrice,
+                                              BigDecimal maxPrice) {
+        Specification<Product> spec = Specification.where(null);
+
+        if (name != null) {
+            spec = spec.and(ProductSpec.hasName(name));
+        }
+        if (minPrice != null) {
+            spec = spec.and(ProductSpec.hasPriceGreaterThanOrEqualTo(minPrice));
+        }
+        if (maxPrice != null) {
+            spec = spec.and(ProductSpec.hasPriceLessThanOrEqualTo(maxPrice));
+        }
+
+        productRepository.findAll(spec).forEach(System.out::println);
     }
 
     @Transactional

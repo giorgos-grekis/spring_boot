@@ -7,6 +7,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
+import java.math.BigDecimal;
+
 @SpringBootApplication
 public class StoreApplication {
 
@@ -48,7 +50,9 @@ public class StoreApplication {
 //        service.fetchProducts();
 //        service.fetchProducts();
 //        service.printLoyalProfiles();
-        service.fetchProducts();
+//        service.fetchProducts();
+//        service.fetchProducts();
+        service.fetchProductsBySpecifications("prod", BigDecimal.valueOf(1), null);
 
 //        // add address
 //        var address = Address.builder()
