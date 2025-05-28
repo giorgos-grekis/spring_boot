@@ -51,8 +51,10 @@ public class StoreApplication {
 //        service.fetchProducts();
 //        service.printLoyalProfiles();
 //        service.fetchProducts();
-        service.fetchProductsByCriteria();
-        service.fetchProductsBySpecifications("prod", BigDecimal.valueOf(1), null);
+//        service.fetchProductsByCriteria();
+//        service.fetchProductsBySpecifications("prod", BigDecimal.valueOf(1), null);
+//    service.fetchSortedProducts();
+    service.fetchPaginatedProducts(0, 10);
 
 //        // add address
 //        var address = Address.builder()
