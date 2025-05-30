@@ -57,11 +57,11 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(
-            @RequestBody RegisterUserRequest request,
+            @RequestBody RegisterUserRequest requestBody,
             UriComponentsBuilder uriBuilder) {
 
-        var user = userMapper.toEntity(request);
-        user = userRepository.save(user);
+        var userToEntity = userMapper.toEntity(requestBody);
+        var user = userRepository.save(userToEntity);
 
         var userDto = userMapper.toDto(user);
         var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId())
@@ -69,6 +69,15 @@ public class UserController {
 
         return ResponseEntity.created(uri).body(userDto);
     }
+
+    /*
+     * TODO: implement logic for update separate values
+     *  like
+     *  1) update only the name,
+     *  2) update name and email
+     *  3) update all
+     *  ect
+     */
 
     @PutMapping("{id}")
     public ResponseEntity<UserDto> updateUser(
