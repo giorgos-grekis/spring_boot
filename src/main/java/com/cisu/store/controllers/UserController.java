@@ -1,12 +1,15 @@
 package com.cisu.store.controllers;
 
+restimport com.cisu.store.dtos.ChangePasswordRequest;
 import com.cisu.store.dtos.RegisterUserRequest;
 import com.cisu.store.dtos.UpdateUserRequest;
 import com.cisu.store.dtos.UserDto;
 import com.cisu.store.mappers.UserMapper;
 import com.cisu.store.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -68,6 +71,28 @@ public class UserController {
                 .toUri();
 
         return ResponseEntity.created(uri).body(userDto);
+    }
+
+    @PostMapping("/{id}/change-password")
+    public ResponseEntity<Void> changePassword(
+            @PathVariable Long id,
+            @RequestBody ChangePasswordRequest requestBody) {
+
+        var user = userRepository.findById(id).orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!user.getPassword().equals(requestBody.getOldPassword())) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        user.setPassword(requestBody.getNewPassword());
+        userRepository.save(user);
+
+        return ResponseEntity.noContent().build();
+
     }
 
     /*
