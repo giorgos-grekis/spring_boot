@@ -79,17 +79,6 @@ public class ProductController {
         return ResponseEntity.ok(productMapper.toDto(product));
     }
 
-    /*
-    * Create a Product resource
-    * with this fields
-    * name
-    * description
-    * price
-    * categoryId
-    *
-    * return 201 with created product
-    */
-
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(
             @RequestBody ProductDto productDto,
@@ -113,8 +102,6 @@ public class ProductController {
                 .buildAndExpand(product.getId()).toUri();
 
         return ResponseEntity.created(uri).body(productDto);
-
-
     }
 
     /*
@@ -125,6 +112,35 @@ public class ProductController {
      *
      * return 200 Ok with the updated product
      */
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDto>  updateProduct(
+            @RequestBody ProductDto productDto,
+            @PathVariable(name = "id") Long id
+    ) {
+        var category = categoryRepository.findById(productDto.getCategoryId())
+                .orElse(null);
+
+        if (category == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+
+        var product = productRepository.findById(id).orElse(null);
+
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        productMapper.update(productDto, product);
+        product.setCategory(category);
+        productRepository.save(product);
+
+        productDto.setId(product.getId());
+
+        return ResponseEntity.ok(productDto);
+
+    }
 
     /*
      * Delete an Existing Product resource
