@@ -104,14 +104,6 @@ public class ProductController {
         return ResponseEntity.created(uri).body(productDto);
     }
 
-    /*
-     * Update a Product resource
-     * Accept a ProductDTO in the request body and update the product
-     *
-     * return 404 Not Found if product not found
-     *
-     * return 200 Ok with the updated product
-     */
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductDto>  updateProduct(
@@ -142,14 +134,21 @@ public class ProductController {
 
     }
 
-    /*
-     * Delete an Existing Product resource
-     *
-     * Validate the product ID and return 404 Not Found if it doesn't exist
-     *
-     * If successful, return 204 No Content with no response body
-     *
-     */
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(
+            @PathVariable(name = "id") Long id
+    ) {
+        var product= productRepository.findById(id).orElse(null);
+
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        productRepository.delete(product);
+
+        return ResponseEntity.noContent().build();
+    }
 
 
 
