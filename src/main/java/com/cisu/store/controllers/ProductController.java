@@ -4,10 +4,12 @@ package com.cisu.store.controllers;
 import com.cisu.store.dtos.ProductDto;
 import com.cisu.store.entities.Product;
 import com.cisu.store.mappers.ProductMapper;
+import com.cisu.store.repositories.CategoryRepository;
 import com.cisu.store.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class ProductController {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final CategoryRepository categoryRepository;
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAllProducts(
@@ -75,4 +78,63 @@ public class ProductController {
 
         return ResponseEntity.ok(productMapper.toDto(product));
     }
+
+    /*
+    * Create a Product resource
+    * with this fields
+    * name
+    * description
+    * price
+    * categoryId
+    *
+    * return 201 with created product
+    */
+
+    @PostMapping
+    public ResponseEntity<ProductDto> createProduct(
+            @RequestBody ProductDto productDto,
+            UriComponentsBuilder uriBuilder
+    ) {
+
+        var category = categoryRepository.findById(productDto.getCategoryId())
+                .orElse(null);
+
+        if (category == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+
+       var product = productMapper.toEntity(productDto);
+        product.setCategory(category);
+        productRepository.save(product);
+        productDto.setId(product.getId());
+
+        var uri = uriBuilder.path("/products/{id}")
+                .buildAndExpand(product.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(productDto);
+
+
+    }
+
+    /*
+     * Update a Product resource
+     * Accept a ProductDTO in the request body and update the product
+     *
+     * return 404 Not Found if product not found
+     *
+     * return 200 Ok with the updated product
+     */
+
+    /*
+     * Delete an Existing Product resource
+     *
+     * Validate the product ID and return 404 Not Found if it doesn't exist
+     *
+     * If successful, return 204 No Content with no response body
+     *
+     */
+
+
+
 }
