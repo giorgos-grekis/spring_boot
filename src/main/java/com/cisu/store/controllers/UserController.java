@@ -1,6 +1,7 @@
 package com.cisu.store.controllers;
 
-restimport com.cisu.store.dtos.ChangePasswordRequest;
+
+import com.cisu.store.dtos.ChangePasswordRequest;
 import com.cisu.store.dtos.RegisterUserRequest;
 import com.cisu.store.dtos.UpdateUserRequest;
 import com.cisu.store.dtos.UserDto;
