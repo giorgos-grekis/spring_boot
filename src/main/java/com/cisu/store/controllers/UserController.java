@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -61,9 +62,15 @@ public class UserController {
 
     @PostMapping
     // MethodArgumentNotValidException
-    public ResponseEntity<UserDto> createUser(
+    public ResponseEntity<?> registerUser(
             @Valid @RequestBody RegisterUserRequest requestBody,
             UriComponentsBuilder uriBuilder) {
+
+        if (userRepository.existsByEmail(requestBody.getEmail())) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("email", "Email already exists!")
+            );
+        }
 
         var userToEntity = userMapper.toEntity(requestBody);
         var user = userRepository.save(userToEntity);
