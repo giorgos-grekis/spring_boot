@@ -7,6 +7,7 @@ import com.cisu.store.dtos.UpdateUserRequest;
 import com.cisu.store.dtos.UserDto;
 import com.cisu.store.mappers.UserMapper;
 import com.cisu.store.repositories.UserRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.Sort;
@@ -61,7 +62,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(
-            @RequestBody RegisterUserRequest requestBody,
+            @Valid @RequestBody RegisterUserRequest requestBody,
             UriComponentsBuilder uriBuilder) {
 
         var userToEntity = userMapper.toEntity(requestBody);
