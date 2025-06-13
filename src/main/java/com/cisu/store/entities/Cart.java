@@ -1,0 +1,31 @@
+package com.cisu.store.entities;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "carts")
+public class Cart {
+    @Id
+//    @Size(max = 16)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    private UUID id;
+
+//    @NotNull
+//    @ColumnDefault("(curdate())")
+    @Column(name = "date_created", insertable = false, updatable = false)
+    private LocalDate dateCreated;
+
+    @OneToMany(mappedBy = "cart")
+    private Set<CartItem> cartItems = new LinkedHashSet<>();
+
+}
