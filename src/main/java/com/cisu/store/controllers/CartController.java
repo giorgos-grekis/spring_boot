@@ -1,6 +1,7 @@
 package com.cisu.store.controllers;
 
 import com.cisu.store.dtos.AddItemToCartRequest;
+import com.cisu.store.dtos.AddItemToCartRvibwequest;
 import com.cisu.store.dtos.CartDto;
 import com.cisu.store.dtos.CartItemDto;
 import com.cisu.store.entities.Cart;
@@ -44,15 +45,13 @@ public class CartController {
             @PathVariable UUID cartId,
             @RequestBody AddItemToCartRequest request) {
         var cart = cartRepository.findById(cartId).orElse(null);
-
         if (cart == null) {
             return ResponseEntity.notFound().build();
         }
 
-
         var product = productRepository.findById(request.getProductId()).orElse(null);
         if (product == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build();
         }
 
         var cartItem = cart.getCartItems().stream()
