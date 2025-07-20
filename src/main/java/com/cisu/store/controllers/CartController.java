@@ -1,7 +1,6 @@
 package com.cisu.store.controllers;
 
 import com.cisu.store.dtos.AddItemToCartRequest;
-import com.cisu.store.dtos.AddItemToCartRvibwequest;
 import com.cisu.store.dtos.CartDto;
 import com.cisu.store.dtos.CartItemDto;
 import com.cisu.store.entities.Cart;
@@ -9,7 +8,6 @@ import com.cisu.store.entities.CartItem;
 import com.cisu.store.mappers.CartMapper;
 import com.cisu.store.repositories.CartRepository;
 import com.cisu.store.repositories.ProductRepository;
-import com.cisu.store.repositories.ProfileRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +42,7 @@ public class CartController {
     public ResponseEntity<CartItemDto> addToCart(
             @PathVariable UUID cartId,
             @RequestBody AddItemToCartRequest request) {
-        var cart = cartRepository.findById(cartId).orElse(null);
+        var cart = cartRepository.getCartWithItems(cartId).orElse(null);
         if (cart == null) {
             return ResponseEntity.notFound().build();
         }
@@ -54,7 +52,7 @@ public class CartController {
             return ResponseEntity.badRequest().build();
         }
 
-        var cartItem = cart.getCartItems().stream()
+        var cartItem = cart.getItems().stream()
                 .filter(item -> item.getProduct()
                         .getId().equals(product.getId()))
                 .findFirst()
@@ -67,7 +65,7 @@ public class CartController {
             cartItem.setProduct(product);
             cartItem.setQuantity(1);
             cartItem.setCart(cart);
-            cart.getCartItems().add(cartItem);
+            cart.getItems().add(cartItem);
         }
 
         cartRepository.save(cart);
@@ -76,5 +74,19 @@ public class CartController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cartItemDto) ;
     }
+
+
+    @GetMapping("{cartId}")
+    public ResponseEntity<CartDto> getCart(
+            @PathVariable UUID cartId
+    ) {
+        var cart = cartRepository.getCartWithItems(cartId).orElse(null);
+        if (cart == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(cartMapper.toDto(cart));
+    }
+
 
 }
