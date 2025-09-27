@@ -1,20 +1,24 @@
 package com.cisu.store.services;
 
+import com.cisu.store.config.JwtConfig;
 import com.cisu.store.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+@AllArgsConstructor
 @Service
 public class JwtService {
+    private final JwtConfig jwtConfig;
 
-    @Value("${spring.jwt.secret}")
-    private String secret;
+//    @Value("${spring.jwt.secret}")
+//    private String secret;
 
     final long MILLISECONDS_IN_SECOND = 1000L;
 
@@ -28,7 +32,7 @@ public class JwtService {
      */
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .verifyWith(jwtConfig.getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
@@ -36,14 +40,15 @@ public class JwtService {
 
     public String generateAccessToken(User user) {
         final long EXPIRATION_ACCESS_TOKEN_IN_SECONDS = 300L; // 5 min
-        final long tokenExpiration = MILLISECONDS_IN_SECOND * EXPIRATION_ACCESS_TOKEN_IN_SECONDS;
+        final long tokenExpiration = MILLISECONDS_IN_SECOND * jwtConfig.getAccessTokenExpiration();
 
+//        return generateToken(user, tokenExpiration);
         return generateToken(user, tokenExpiration);
     }
 
     public String generateRefreshToken(User user) {
-        final long EXPIRATION_REFRESH_TOKEN_IN_SECONDS = 604800; // 7 days
-        final long tokenExpiration = MILLISECONDS_IN_SECOND * EXPIRATION_REFRESH_TOKEN_IN_SECONDS;
+//        final long EXPIRATION_REFRESH_TOKEN_IN_SECONDS = 604800; // 7 days
+        final long tokenExpiration = MILLISECONDS_IN_SECOND * jwtConfig.getRefreshTokenExpiration();
 
         return generateToken(user, tokenExpiration);
     }
@@ -55,7 +60,7 @@ public class JwtService {
                 .claim("name", user.getName())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + tokenExpiration))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .signWith(jwtConfig.getSecretKey())
                 .compact();
     }
 
