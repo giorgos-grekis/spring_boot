@@ -1,5 +1,6 @@
 package com.cisu.store.services;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -14,13 +15,23 @@ public class JwtService {
     @Value("${spring.jwt.secret}")
     private String secret;
 
-    public String generateToken(String email) {
-//        /**
-//         * 86400 -> 1 days in seconds
-//         * 1000 -> need to transform into milliseconds
-//         */
-//        final long tokenExpiration = 1000 * 86400;
+    /**
+     * Parses the signed JWT and extracts its claims payload.
+     *
+     * @param token The signed JWT string.
+     * @return The {@code Claims} payload contained within the token.
+     * @throws JwtException If the token is not a valid signed JWT (e.g., signature fails,
+     * malformed token).
+     */
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
 
+    public String generateToken(String email) {
         /**
          * The token expiration time, set to 1 day (24 hours) in milliseconds.
          * 86400 seconds/day * 1000 milliseconds/second = 86,400,000 ms
@@ -40,18 +51,12 @@ public class JwtService {
 
     /**
      * Check if the token is valid (not expired and structurally sound).
-     * * @param token The JWT string to validate.
+     * @param token The JWT string to validate.
      * @return {@code true} if the token is valid and not expired; {@code false} otherwise,
-     * including if it is malformed, invalidly signed, or expired.
      */
     public boolean validateToken(String token) {
         try {
-            var claims = Jwts.parser()
-                    .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
-
+            var claims = getClaims(token);
             return claims.getExpiration().after(new Date());
         }
         catch (JwtException e) {
@@ -59,4 +64,8 @@ public class JwtService {
         }
     }
 
+
+    public String getEmailFromToken(String token) {
+       return getClaims(token).getSubject();
+    }
 }
