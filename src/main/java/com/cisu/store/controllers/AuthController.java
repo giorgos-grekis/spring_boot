@@ -1,42 +1,38 @@
 package com.cisu.store.controllers;
 
 import com.cisu.store.dtos.LoginRequest;
-import com.cisu.store.dtos.RegisterUserRequest;
-import com.cisu.store.repositories.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(
            @Valid @RequestBody LoginRequest requestBody
             ) {
-
-        var user = userRepository.findByEmail(requestBody.getEmail()).orElse(null);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        var passwordIsMatches = passwordEncoder.matches(requestBody.getPassword(), user.getPassword());
-
-        if(!passwordIsMatches) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        requestBody.getEmail(),
+                        requestBody.getPassword()
+                )
+        );
 
         return ResponseEntity.ok().build();
+    }
+
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Void> handleBadCredentialsException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
