@@ -1,5 +1,6 @@
 package com.cisu.store.config;
 
+import com.cisu.store.entities.Role;
 import com.cisu.store.filters.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -55,16 +56,21 @@ public class SecurityConfig {
                 c ->
                         c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(c ->
-                        c.requestMatchers("/carts/**").permitAll()
+                .authorizeHttpRequests(c -> c
+                                .requestMatchers("/carts/**").permitAll()
+                                .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.POST,  "/users").permitAll()
                                 .requestMatchers(HttpMethod.POST,  "/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST,  "/auth/refresh-token").permitAll()
                                 .anyRequest().authenticated()
                         )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(c ->
-                        c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                .exceptionHandling(c -> {
+                            c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+                            c.accessDeniedHandler((request, response, accessDeniedException) -> {
+                                response.setStatus(HttpStatus.FORBIDDEN.value());
+                            });
+                        }
                 );
 
         return http.build();
