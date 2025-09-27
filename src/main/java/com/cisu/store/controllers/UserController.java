@@ -5,6 +5,7 @@ import com.cisu.store.dtos.ChangePasswordRequest;
 import com.cisu.store.dtos.RegisterUserRequest;
 import com.cisu.store.dtos.UpdateUserRequest;
 import com.cisu.store.dtos.UserDto;
+import com.cisu.store.entities.Role;
 import com.cisu.store.mappers.UserMapper;
 import com.cisu.store.repositories.UserRepository;
 import jakarta.validation.Valid;
@@ -79,9 +80,8 @@ public class UserController {
 
         var user = userMapper.toEntity(requestBody);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         userRepository.save(user);
-
-
 
         var userDto = userMapper.toDto(user);
         var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId())
