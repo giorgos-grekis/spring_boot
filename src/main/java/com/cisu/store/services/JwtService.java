@@ -1,5 +1,6 @@
 package com.cisu.store.services;
 
+import com.cisu.store.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -31,7 +32,7 @@ public class JwtService {
                 .getPayload();
     }
 
-    public String generateToken(String email) {
+    public String generateToken(User user) {
         /**
          * The token expiration time, set to 1 day (24 hours) in milliseconds.
          * 86400 seconds/day * 1000 milliseconds/second = 86,400,000 ms
@@ -42,7 +43,9 @@ public class JwtService {
         final long tokenExpiration = MILLISECONDS_IN_SECOND * SECONDS_IN_DAY;
 
         return Jwts.builder()
-                .subject(email)
+                .subject(user.getId().toString())
+                .claim("email: ", user.getEmail())
+                .claim("name", user.getName())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + tokenExpiration))
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
@@ -65,7 +68,7 @@ public class JwtService {
     }
 
 
-    public String getEmailFromToken(String token) {
-       return getClaims(token).getSubject();
+    public Long getUserIdFromToken(String token) {
+       return Long.valueOf(getClaims(token).getSubject());
     }
 }
