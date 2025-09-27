@@ -17,11 +17,16 @@ import java.util.Date;
 @Service
 public class JwtService {
     private final JwtConfig jwtConfig;
-
-//    @Value("${spring.jwt.secret}")
-//    private String secret;
-
     final long MILLISECONDS_IN_SECOND = 1000L;
+
+    public Jwt parseToken(String token) {
+        try {
+            var claims = getClaims(token);
+            return new Jwt(claims, jwtConfig.getSecretKey());
+        } catch (JwtException e) {
+            return null;
+        }
+    }
 
     /**
      * Parses the signed JWT and extracts its claims payload.
@@ -39,53 +44,28 @@ public class JwtService {
                 .getPayload();
     }
 
-    public String generateAccessToken(User user) {
-        final long EXPIRATION_ACCESS_TOKEN_IN_SECONDS = 300L; // 5 min
+    public Jwt generateAccessToken(User user) {
         final long tokenExpiration = MILLISECONDS_IN_SECOND * jwtConfig.getAccessTokenExpiration();
 
-//        return generateToken(user, tokenExpiration);
         return generateToken(user, tokenExpiration);
     }
 
-    public String generateRefreshToken(User user) {
-//        final long EXPIRATION_REFRESH_TOKEN_IN_SECONDS = 604800; // 7 days
+    public Jwt generateRefreshToken(User user) {
         final long tokenExpiration = MILLISECONDS_IN_SECOND * jwtConfig.getRefreshTokenExpiration();
 
         return generateToken(user, tokenExpiration);
     }
 
-    private String generateToken(User user, long tokenExpiration) {
-        return Jwts.builder()
+    private Jwt generateToken(User user, long tokenExpiration) {
+       var claims = Jwts.claims()
                 .subject(user.getId().toString())
-                .claim("email: ", user.getEmail())
-                .claim("name", user.getName())
-                .claim("role", user.getRole())
+                .add("email", user.getEmail())
+                .add("name", user.getName())
+                .add("role", user.getRole())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + tokenExpiration))
-                .signWith(jwtConfig.getSecretKey())
-                .compact();
-    }
+                .build();
 
-    /**
-     * Check if the token is valid (not expired and structurally sound).
-     * @param token The JWT string to validate.
-     * @return {@code true} if the token is valid and not expired; {@code false} otherwise,
-     */
-    public boolean validateToken(String token) {
-        try {
-            var claims = getClaims(token);
-            return claims.getExpiration().after(new Date());
-        }
-        catch (JwtException e) {
-            return false;
-        }
-    }
-
-    public Long getUserIdFromToken(String token) {
-       return Long.valueOf(getClaims(token).getSubject());
-    }
-
-    public Role getRoleFromToken(String token) {
-        return Role.valueOf(getClaims(token).get("role", String.class));
+       return new Jwt(claims, jwtConfig.getSecretKey());
     }
 }
