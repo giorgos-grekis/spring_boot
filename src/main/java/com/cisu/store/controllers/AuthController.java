@@ -1,6 +1,8 @@
 package com.cisu.store.controllers;
 
+import com.cisu.store.dtos.JwtResponse;
 import com.cisu.store.dtos.LoginRequest;
+import com.cisu.store.services.JwtService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,9 +17,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(
+    public ResponseEntity<JwtResponse> login(
            @Valid @RequestBody LoginRequest requestBody
             ) {
         authenticationManager.authenticate(
@@ -27,7 +30,9 @@ public class AuthController {
                 )
         );
 
-        return ResponseEntity.ok().build();
+        var token = jwtService.generateToken(requestBody.getEmail());
+
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 
 
