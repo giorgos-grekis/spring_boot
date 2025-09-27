@@ -48,7 +48,7 @@ public class AuthController {
         var refreshToken = jwtService.generateRefreshToken(user);
 
         var cookie = new Cookie("refreshToken", refreshToken);
-//        cookie.setPath("/auth/refresh");
+//        cookie.setPath("/auth/refresh-token");
         cookie.setPath("/");
         cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration()); // 7 days
         cookie.setHttpOnly(true);
@@ -56,18 +56,25 @@ public class AuthController {
         // Lax
         cookie.setAttribute("SameSite", "Strict");
 
-
-        System.out.println("Cookie: " + cookie);
         response.addCookie(cookie);
 
         return ResponseEntity.ok(new JwtResponse(accessToken));
     }
 
-    @PostMapping("/validate")
-    public boolean validate(@RequestHeader("Authorization") String authHeader) {
-        System.out.println("validated called");
-       var token = authHeader.replace("Bearer ", "");
-       return jwtService.validateToken(token);
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<JwtResponse> refreshToken(
+            @CookieValue(value = "refreshToken") String refreshToken
+    ) {
+        if (!jwtService.validateToken(refreshToken)) {
+           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        var userId = jwtService.getUserIdFromToken(refreshToken);
+        var user = userRepository.findById(userId).orElseThrow();
+        var accessToken = jwtService.generateAccessToken(user);
+
+        return ResponseEntity.ok(new JwtResponse(accessToken));
     }
 
     @GetMapping("/me")
