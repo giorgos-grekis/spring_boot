@@ -16,6 +16,8 @@ public class JwtService {
     @Value("${spring.jwt.secret}")
     private String secret;
 
+    final long MILLISECONDS_IN_SECOND = 1000L;
+
     /**
      * Parses the signed JWT and extracts its claims payload.
      *
@@ -32,16 +34,21 @@ public class JwtService {
                 .getPayload();
     }
 
-    public String generateToken(User user) {
-        /**
-         * The token expiration time, set to 1 day (24 hours) in milliseconds.
-         * 86400 seconds/day * 1000 milliseconds/second = 86,400,000 ms
-         */
-        final long SECONDS_IN_DAY = 86400L;
-        final long MILLISECONDS_IN_SECOND = 1000L;
+    public String generateAccessToken(User user) {
+        final long EXPIRATION_ACCESS_TOKEN_IN_SECONDS = 300L; // 5 min
+        final long tokenExpiration = MILLISECONDS_IN_SECOND * EXPIRATION_ACCESS_TOKEN_IN_SECONDS;
 
-        final long tokenExpiration = MILLISECONDS_IN_SECOND * SECONDS_IN_DAY;
+        return generateToken(user, tokenExpiration);
+    }
 
+    public String generateRefreshToken(User user) {
+        final long EXPIRATION_REFRESH_TOKEN_IN_SECONDS = 604800; // 7 days
+        final long tokenExpiration = MILLISECONDS_IN_SECOND * EXPIRATION_REFRESH_TOKEN_IN_SECONDS;
+
+        return generateToken(user, tokenExpiration);
+    }
+
+    private String generateToken(User user, long tokenExpiration) {
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email: ", user.getEmail())
