@@ -19,30 +19,27 @@ import java.util.Set;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
     private User customer;
 
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "status", nullable = false, length = 20)
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @NotNull
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @NotNull
-    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "total_price", precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
-    @OneToMany(mappedBy = "order")
+    // When we save the parent in order to save the children as well
+    // we need to add CascadeType.PERSIST
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private Set<OrderItem> items = new LinkedHashSet<>();
 
 }

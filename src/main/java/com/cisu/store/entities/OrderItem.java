@@ -14,29 +14,26 @@ import java.math.BigDecimal;
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "order_id")
     private Order order;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne()
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @NotNull
-    @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "unit_price", precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    @NotNull
-    @Column(name = "quantity", nullable = false)
+    @Column(name = "quantity")
     private Integer quantity;
 
-    @NotNull
-    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "total_price", precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
 }

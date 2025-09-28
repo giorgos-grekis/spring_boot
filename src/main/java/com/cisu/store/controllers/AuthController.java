@@ -6,6 +6,7 @@ import com.cisu.store.dtos.LoginRequest;
 import com.cisu.store.dtos.UserDto;
 import com.cisu.store.mappers.UserMapper;
 import com.cisu.store.repositories.UserRepository;
+import com.cisu.store.services.AuthService;
 import com.cisu.store.services.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,6 +29,7 @@ public class AuthController {
     private final JwtConfig jwtConfig;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final AuthService authService;
 
 
 
@@ -81,10 +83,13 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> me() {
-       var authetication = SecurityContextHolder.getContext().getAuthentication();
-       var userId = (Long) authetication.getPrincipal();
+//       var authetication = SecurityContextHolder.getContext().getAuthentication();
+//       var userId = (Long) authetication.getPrincipal();
+//
+//       var user = userRepository.findById(userId).orElse(null);
 
-       var user = userRepository.findById(userId).orElse(null);
+        var user = authService.getCurrentUser();
+
        if (user == null) {
            return ResponseEntity.notFound().build();
        }
